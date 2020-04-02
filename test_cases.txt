@@ -1,0 +1,42 @@
+testing cases:
+
+n:
+    m < 0
+    m = 0
+    m > 0
+
+i:
+    u outside valid range
+    v outside valid range 
+    both outside valid range
+    w < 0
+    w = 0
+    inserting new edge
+    updating old edge
+
+d:
+    no edge connecting u and v
+    u outside valid range
+    v outside valid range 
+    both outside valid range
+    successful deletion
+    after clear
+
+degree:
+    u is outside valid range
+    u is a valid node
+    after clear
+
+edge_count:
+    empty graph
+    non empty graph
+    after clear
+
+clear:
+    empty graph
+    non empty graph
+
+mst:
+    graph is not connected 
+    graph is connected
+    after clear
