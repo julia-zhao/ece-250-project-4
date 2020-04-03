@@ -137,9 +137,6 @@ int main (void){
                 else{
                     std::cout << "not connected";
                 }
-            }catch(illegal_argument){ 
-                std::cout << "not connected";
-            }
         }
         else{
             //invalid command, will ignore and continue

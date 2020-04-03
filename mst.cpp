@@ -65,7 +65,6 @@ void MST::insert_edge(int u, int v, double w){
     //update weight of edge
     array[u][v] = w;
     array[v][u] = w;
-    //std::cout << "array[" << u << "][" << v << "]: " <<array[u][v] << std::endl;
 }
 /**
     Deletes edge between u and v

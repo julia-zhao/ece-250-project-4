@@ -18,9 +18,8 @@ class Disjoint_Set
         ~Disjoint_Set();
 
         void init(int s);
-        //void clear();
         void make_set(int x);
         void union_set(int x, int y);
         Node* find_set(int x);
-        // void print(); //debug only
+        void print(); //debug only
 };

@@ -13,6 +13,7 @@ class Deque
 private:
     Node* head;
     Node* tail;
+    int length;
 
 public:
     Deque();
@@ -20,6 +21,9 @@ public:
 
     Node* get_head();
     Node* get_tail();
+    int get_length();
+    void add_length();
+    void set_tail(Node*);
     void merge(Deque& t);
 
     bool find(int &i);

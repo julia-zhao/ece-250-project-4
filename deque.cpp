@@ -14,6 +14,7 @@
 Deque::Deque(){
     head = nullptr;
     tail = nullptr;
+    length = 0;
 }
 
 Deque::~Deque(){
@@ -26,19 +27,47 @@ Node* Deque::get_head(){
 Node* Deque::get_tail(){
     return tail;
 }
+int Deque::get_length(){
+    return length;
+}
+void Deque::add_length(){
+    length++;
+}
+void Deque::set_tail(Node* t){
+    tail = t;
+}
 
 void Deque::merge(Deque& t){
-    //set tail of current Deque to head of t
-    tail -> set_next(t.get_head());
-    //connect head of t to tail of current Deque
-    t.get_head() -> set_prev(tail);
-    tail = t.get_tail();
-    //set the parent of all nodes in t to be the head
-    Node* temp = t.get_head();
-    do {
-        temp -> set_parent(head);
-        temp = temp -> get_next();
-    } while (temp != nullptr);
+    //merge t to the back of this
+    if (length >= t.get_length()){
+        //set tail of current Deque to head of t
+        tail -> set_next(t.get_head());
+        //connect head of t to tail of current Deque
+        t.get_head() -> set_prev(tail);
+        tail = t.get_tail();
+        //set the parent of all nodes in t to be the head
+        Node* temp = t.get_head();
+        do {
+            temp -> set_parent(head);
+            temp = temp -> get_next();
+            length++; //add 1 length to this deque
+        } while (temp != nullptr);
+    }
+    //merge this to the back of t
+    else{
+        //set tail of t to head of current Deque
+        t.get_tail() -> set_next(head);
+        //connect head of current Deque to tail of t
+        head -> set_prev(t.get_tail());
+        t.set_tail(tail);
+        //set the parent of all nodes in this to be the head
+        Node* temp = head;
+        do {
+            temp -> set_parent(t.get_head());
+            temp = temp -> get_next();
+            t.add_length(); //add 1 length to t
+        } while (temp != nullptr);
+    }
 }
 
 /**  
@@ -81,6 +110,7 @@ void Deque::enqueue_back(int &i){
         tail = last;
         last -> set_parent(head);
     }
+    length++;
 }
 /**  
     General functionality for removing item from front of queue. 
@@ -100,18 +130,7 @@ void Deque::front_delete(){
             tail = nullptr;
         }
     }
-}
-/**  
-    Removes element from front of queue
-    @return void
-*/
-void Deque::dequeue_front(){
-    if (head!=nullptr){ //list is not empty  
-        Deque::front_delete();
-    }
-    else{ //fail because the list is empty
-        throw deque_empty();
-    }
+    length--;
 }
 /**  
     Clears the queue if it is not already empty
@@ -125,12 +144,14 @@ void Deque::clear(){
     }
     tail=nullptr;
     head = nullptr;
+    length=0;
 }
 
 /**  
     Prints the queue twice: once front-to-back, then once back-to-front
     @return void
 */
+//debug purposes only
 bool Deque::print(){
     if (head != nullptr){ //there is at least one element 
         Node* temp = head;
