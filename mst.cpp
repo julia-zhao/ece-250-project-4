@@ -45,9 +45,6 @@ void MST::num_nodes(int m){
         }
         //set all values to 0
         clear();
-
-        //initialize the DSet array
-        DSet -> init(size);
     }   
 }
 /**
@@ -57,8 +54,8 @@ void MST::num_nodes(int m){
     @param w = weight of edge
 */
 void MST::insert_edge(int u, int v, double w){
-    //w<=0 or u or v is outside of the range
-    if (w<=0 || (u<0 || u>size-1) || (v<0 || v>size-1)){
+    //w<=0 or u or v is outside of the range or if it is a self edge (as specified by piazza)
+    if (w<=0 || (u<0 || u>size-1) || (v<0 || v>size-1) || (u==v)){
         throw illegal_argument();
     }
     //create edge if it doesnt already exist
@@ -75,15 +72,20 @@ void MST::insert_edge(int u, int v, double w){
     @param u = first vertex
     @param v = second vertex
 */
-void MST::delete_edge(int u, int v){
-    //the edge doesn't exist or u or v is outside of the range
-    if ((u<0 || u>size-1) || (v<0 || v>size-1) || (array[u][v]==0)){
+bool MST::delete_edge(int u, int v){
+    //u or v is outside of the range
+    if ((u<0 || u>size-1) || (v<0 || v>size-1)){
         throw illegal_argument();
+    }
+    //the edge doesn't exist
+    else if (array[u][v]==0){
+        return false;
     }
     //the edge exists so delete the edge
     edges--;
     array[u][v] = 0;
     array[v][u] = 0;
+    return true;
 }
 /**
     Returns degree of vertex u
@@ -100,9 +102,6 @@ unsigned int MST::degree(int u){
     for (int i=0; i<size; i++){
         if (array[u][i]!=0 && i!=u){
             counter++;
-        }
-        else if (array[u][i]!=0 && i==u){ //an edge to itself contributes twice
-            counter+=2;
         }
     }
     return counter;
@@ -131,22 +130,13 @@ void MST::clear(){
     @return total weight of MST
 */
 double MST::mst(){
+    if (size == 1){
+        return -1;
+    }
+    Disjoint_Set* DSet = new Disjoint_Set();
+    DSet -> init(size);
     Edge edge_array[edges];
     int counter = 0;
-
-    //TODO: delete
-    //displays adjacency matrix
-    // for (int i=0; i<size; i++){
-    //     for (int j=0; j<size; j++){
-    //         if (j<i){
-    //             std::cout << "- ";
-    //         }
-    //         else{
-    //             std::cout << array[i][j] << " ";
-    //         }
-    //     }
-    //     std::cout << std::endl;
-    // }
 
     //since the edges are unweighted, the edge from a to b is equal to the edge from b to a
     //so, only traverse the right diagonal half of the matrix
@@ -164,45 +154,33 @@ double MST::mst(){
     }
 
     //sort by weight
-    // std::sort(edge_array,edge_array+edges,[](const Edge& left, const Edge& right){return left.weight < right.weight;});
-    // for (int i=0; i<edges; i++){
-    //     std::cout << "wt: " << edge_array[i].weight << " src: " << edge_array[i].src << " dest: " << edge_array[i].dest << std::endl;
-    // }
+    std::sort(edge_array,edge_array+edges,[](const Edge& left, const Edge& right){return left.weight < right.weight;});
+   
     double mst_size= 0;
 
-    DSet -> clear();
     //initialize disjoint sets
     for (int i=0; i<size; i++){
         DSet -> make_set(i);
     }
 
-    //DSet -> print(); //TODO: delete
-
     int u,v,u_set,v_set;
     for (int i=0; i<edges; i++){
         u = edge_array[i].src;
         v = edge_array[i].dest;
-        //std::cout << "u: " << u << " v:" << v << std::endl; //TODO: delete
-        u_set = DSet -> find_set(u);
-        v_set = DSet -> find_set(v);
-        if (u_set!= v_set){
-            //add vertex (u,v) to MST
-            DSet -> union_set(u_set,v_set);
+        if (DSet -> find_set(u) != DSet -> find_set(v)){
+            DSet -> union_set(u,v);
             mst_size+=edge_array[i].weight; //one edge has been added to MST
         }
     }
 
-    //DSet -> print(); //TODO: delete
-    
     //check that MST is all connected
-    int num = DSet -> find_set(0);
+    Node* parent = DSet -> find_set(0);
     for (int i=1; i<size; i++){
-        if (DSet -> find_set(i) != num){
-            //DSet -> clear();
-            throw illegal_argument();
+        if (DSet -> find_set(i) != parent){
+            return -1;
         }
     }
 
-    //DSet -> clear();
+    DSet -> ~Disjoint_Set();
     return mst_size;
 }

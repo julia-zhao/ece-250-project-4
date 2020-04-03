@@ -18,14 +18,13 @@ class MST{
         int size;
         unsigned int edges;
         double** array;
-        Disjoint_Set* DSet = new Disjoint_Set();
 
         MST();
         ~MST();
 
         void num_nodes(int m);
         void insert_edge(int u, int v, double w);
-        void delete_edge(int u, int v);
+        bool delete_edge(int u, int v);
         unsigned int degree(int u);
         unsigned int edge_count();
         void clear();

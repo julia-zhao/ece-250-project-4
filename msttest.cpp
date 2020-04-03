@@ -62,7 +62,7 @@ int main (void){
                 std::cout << "success";
             }catch(illegal_argument){ //number of nodes < 0
                 std::cout << "failure" << std::endl;
-                break; //the program will terminate as per project specs
+                return 0; //the program will terminate as per project specs
             }
         }
         else if (temp_str.compare("i") == 0){ //inserts edge between nodes
@@ -100,8 +100,13 @@ int main (void){
 
                 t = temp_str.substr(temp_int + 1, temp_str.length());
                 int v = trim_int(t);  
-                set -> delete_edge(u,v);
-                std::cout << "success";
+                bool temp_bool = set -> delete_edge(u,v);
+                if (temp_bool){
+                    std::cout << "success"; 
+                }
+                else{
+                    std::cout << "failure";
+                }
             }catch(illegal_argument){ 
                 std::cout << "failure";
             }
@@ -126,7 +131,12 @@ int main (void){
         else if (temp_str.compare("mst") == 0){
             try{
                 temp_double = set -> mst();
-                std::cout << "mst " << temp_double;
+                if (temp_double > -1){
+                    std::cout << "mst " << temp_double;
+                }
+                else{
+                    std::cout << "not connected";
+                }
             }catch(illegal_argument){ 
                 std::cout << "not connected";
             }
@@ -146,10 +156,9 @@ int main (void){
 
         temp_str = "";
 
-        //std::cout << "----------" << std::endl;
+        // std::cout << "----------" << std::endl;
 
     } //end of file
-
     set -> ~MST();
     
     return 0;

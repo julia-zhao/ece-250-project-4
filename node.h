@@ -9,6 +9,7 @@ private:
     int data;
     Node* next_node;
     Node* prev_node;
+    Node* parent;
     
 public:
     Node();
@@ -19,10 +20,12 @@ public:
     int get_data();
     Node* get_next();
     Node* get_prev();
+    Node* get_parent();
 
     void set_data(int &i);
     void set_next(Node* next);
     void set_prev(Node* prev);
+    void set_parent(Node* p);
 };
 
 

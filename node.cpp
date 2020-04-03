@@ -10,11 +10,13 @@ Node::Node(int &i){ //constructor for the head
     data = i;
     next_node = nullptr;
     prev_node = nullptr;
+    parent = nullptr;
 }
 Node::Node(int &i, Node* next, Node* prev){ //constructor for enqueue_front
     data = i;
     next_node = next;
     prev_node = prev;
+    parent = nullptr;
 }
 Node::~Node(){} //doesn't do anything
 
@@ -27,6 +29,9 @@ Node* Node::get_next(){
 Node* Node::get_prev(){
     return prev_node;
 }
+Node* Node::get_parent(){
+    return parent;
+}
 void Node::set_data(int &i){
     data = i;
 }
@@ -35,4 +40,7 @@ void Node::set_next(Node* next){
 }
 void Node::set_prev(Node* prev){
     prev_node = prev;
+}
+void Node::set_parent(Node* p){
+    parent = p;
 }
