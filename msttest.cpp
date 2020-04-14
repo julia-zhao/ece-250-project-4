@@ -129,14 +129,13 @@ int main (void){
             std::cout << "success";
         }
         else if (temp_str.compare("mst") == 0){
-            try{
-                temp_double = set -> mst();
-                if (temp_double > -1){
-                    std::cout << "mst " << temp_double;
-                }
-                else{
-                    std::cout << "not connected";
-                }
+            temp_double = set -> mst();
+            if (temp_double > -1){
+                std::cout << "mst " << temp_double;
+            }
+            else{
+                std::cout << "not connected";
+            }
         }
         else{
             //invalid command, will ignore and continue
